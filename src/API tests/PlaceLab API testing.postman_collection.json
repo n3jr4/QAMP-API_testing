@@ -30,12 +30,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://demo.placelab.com/",
-							"protocol": "https",
+							"raw": "{{PlaceLabHost}}/",
 							"host": [
-								"demo",
-								"placelab",
-								"com"
+								"{{PlaceLabHost}}"
 							],
 							"path": [
 								""
@@ -87,15 +84,13 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "email",
-									"value": "{{email}}",
-									"description": "Enter manually",
+									"key": "password",
+									"value": "{{password}}",
 									"type": "text"
 								},
 								{
-									"key": "password",
-									"value": "{{password}}",
-									"description": "Enter manually",
+									"key": "email",
+									"value": "{{email}}",
 									"type": "text"
 								}
 							]
@@ -187,11 +182,32 @@
 				},
 				{
 					"name": "Log in with wrong email and correct password (negative test case)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"error\", \"Password mismatch.\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
 						"url": {
-							"raw": "{{PlaceLabHost}}/api/v2/sessions?email&password",
+							"raw": "{{PlaceLabHost}}/api/v2/sessions?email={{$randomEmail}}&password={{password}}",
 							"host": [
 								"{{PlaceLabHost}}"
 							],
@@ -203,11 +219,11 @@
 							"query": [
 								{
 									"key": "email",
-									"value": null
+									"value": "{{$randomEmail}}"
 								},
 								{
 									"key": "password",
-									"value": null
+									"value": "{{password}}"
 								}
 							]
 						}
@@ -216,11 +232,28 @@
 				},
 				{
 					"name": "Log in with correct email and wrong password (negative test case)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"error\", \"Password mismatch.\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{PlaceLabHost}}/api/v2/sessions?email&password",
+							"raw": "{{PlaceLabHost}}/api/v2/sessions?email={{email}}&password={{$randomPassword}}",
 							"host": [
 								"{{PlaceLabHost}}"
 							],
@@ -232,11 +265,11 @@
 							"query": [
 								{
 									"key": "email",
-									"value": null
+									"value": "{{email}}"
 								},
 								{
 									"key": "password",
-									"value": null
+									"value": "{{$randomPassword}}"
 								}
 							]
 						}
@@ -266,7 +299,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{PlaceLabHost}}/api/v2/sessions?email=dummy@hotmail.com&password=dummyddummy",
+							"raw": "{{PlaceLabHost}}/api/v2/sessions?email={{$randomEmail}}&password={{$randomPassword}}",
 							"host": [
 								"{{PlaceLabHost}}"
 							],
@@ -278,11 +311,11 @@
 							"query": [
 								{
 									"key": "email",
-									"value": "dummy@hotmail.com"
+									"value": "{{$randomEmail}}"
 								},
 								{
 									"key": "password",
-									"value": "dummyddummy"
+									"value": "{{$randomPassword}}"
 								}
 							]
 						}
@@ -301,7 +334,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"Response contains error message\", function () {\r",
-									"    pm.expect(pm.response.json()).to.have.property(\"error\", \"password is missing.\");\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"error\", \"password is missing\");\r",
 									"});"
 								],
 								"type": "text/javascript"

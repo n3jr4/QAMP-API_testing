@@ -431,14 +431,36 @@
 			]
 		}
 	],
-	"variable": [
+	"event": [
 		{
-			"key": "token",
-			"value": ""
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		},
 		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
 			"key": "bookingId",
-			"value": "4620"
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
 		}
 	]
 }
