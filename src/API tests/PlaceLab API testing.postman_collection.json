@@ -1,0 +1,467 @@
+{
+	"info": {
+		"_postman_id": "95787bf8-92b9-47d1-b7f7-1a1892f1851e",
+		"name": "PlaceLab API testing",
+		"description": "In this collection positive and negative test cases were intorduced in order to test PlaceLab Login functionality via API.\n\nPlaceLab is an advanced analytics tool offering different modules. Using machine learning, PlaceLab automates the processes used to detect standard data issues, including data evaluation, verification, and enrichment.\n\nIn the test the following was done:\n\n- Verification that the API is accessible and returning a successful response by sending a GET request to the root endpoint: [_**https://demo.placelab.com**_](https://demo.placelab.com). It is verified that the response status code is 200. The given URL is saved as collection variable and used as such in all requests.\n    \n\n- Verification that user can log in and new authentication token can be generated with POST _**/api/v2/sessions?email&password**_ while using correct and valid credentials. It is verified that upon providing valid email and password as body oarameters, the response status code is 200 and the response body contains the newly created token. It is verified that the received token is not empty and its value is further stored as collection variable.\n    \n\n- Verification that user can't log in or new authentication token can't be generated if email and password parameters are sent as empty values to _**/api/v2/sessions?email&password**_ .It is verified that the response status code is 401 Unauthorized and the response body contains the error message: \"Password mismatch\".\n    \n\n- Verification that user can't log in or new authentication token can't be generated if invalid email (sent as random generated email variable) and valid password are sent as parameters in the request body to _**/api/v2/sessions?email&password**_. It is verified that the response status code is 401 Unauthorized and the response body contains the error message: \"Password mismatch\".\n    \n\n- Verification that user can't log in or new authentication token can't be generated if valid email but invalid password (sent as random generated password variable) are sent as parameters in the request body to _**/api/v2/sessions?email&password**_ .It is verified that the response status code is 401 Unauthorized and the response body contains the error message: \"Password mismatch\".\n    \n\n- Verification that user can't log in or new authentication token can't be generated if invalid email and invalid password (both sent as radom generated variable) are sent as parameters in the request body to _**/api/v2/sessions?email&password**_. It is verified that the response status code is 401 Unauthorized and the response body contains the error message: \"Password mismatch\".\n    \n\n- Verification that user can't log in or new authentication token can't be generated if only valid email is sent as parameter in the request body to _**/api/v2/sessions?email&password**_. It is verified that the response status code is 400 Bad request and the response body contains the error message: \"email is missing, password is missing\".\n    \n\nGenerated api_token was storred as collection variable, while valid credentials were used and storred as enviroment variables.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27479978",
+		"_collection_link": "https://crimson-star-683354.postman.co/workspace/QAMP2023~1fde8c71-a39d-4f6c-9415-da832a962dca/collection/27479978-95787bf8-92b9-47d1-b7f7-1a1892f1851e?action=share&creator=27479978&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "PlaceLab Login via API tests",
+			"item": [
+				{
+					"name": "Host is reachable",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PlaceLabHost}}/",
+							"host": [
+								"{{PlaceLabHost}}"
+							],
+							"path": [
+								""
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Log in with valid credentials (positive test case)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains api_token\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"api_token\").and.to.not.be.empty;\r",
+									"    \r",
+									"    var api_token = pm.response.token;\r",
+									"    pm.collectionVariables.set(\"api_token\", api_token);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{email}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{PlaceLabHost}}/api/v2/sessions?email&password",
+							"host": [
+								"{{PlaceLabHost}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"sessions"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": null
+								},
+								{
+									"key": "password",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Log in with empty credentials (negative test case)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"error\", \"Password mismatch.\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{PlaceLabHost}}/api/v2/sessions?email&password",
+							"host": [
+								"{{PlaceLabHost}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"sessions"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": null
+								},
+								{
+									"key": "password",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Log in with wrong email and correct password (negative test case)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"error\", \"Password mismatch.\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{PlaceLabHost}}/api/v2/sessions?email={{$randomEmail}}&password={{password}}",
+							"host": [
+								"{{PlaceLabHost}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"sessions"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Log in with correct email and wrong password (negative test case)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"error\", \"Password mismatch.\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{PlaceLabHost}}/api/v2/sessions?email={{email}}&password={{$randomPassword}}",
+							"host": [
+								"{{PlaceLabHost}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"sessions"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "{{email}}"
+								},
+								{
+									"key": "password",
+									"value": "{{$randomPassword}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Log in with wrong email and wrong password (negative test case)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"error\", \"Password mismatch.\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{PlaceLabHost}}/api/v2/sessions?email={{$randomEmail}}&password={{$randomPassword}}",
+							"host": [
+								"{{PlaceLabHost}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"sessions"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}"
+								},
+								{
+									"key": "password",
+									"value": "{{$randomPassword}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Log in if only parameter email is sent (negative test case)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"error\", \"password is missing\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{PlaceLabHost}}/api/v2/sessions?email={{email}}",
+							"host": [
+								"{{PlaceLabHost}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"sessions"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "{{email}}"
+								},
+								{
+									"key": "password",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Log in if only parameter password is sent (negative test case)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"error\", \"email is missing\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{PlaceLabHost}}/api/v2/sessions?password={{password}}",
+							"host": [
+								"{{PlaceLabHost}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"sessions"
+							],
+							"query": [
+								{
+									"key": "password",
+									"value": "{{password}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Log in if no parameters are sent (negative test case)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"error\", \"email is missing, password is missing\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{PlaceLabHost}}/api/v2/sessions",
+							"host": [
+								"{{PlaceLabHost}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "PlaceLabHost",
+			"value": "https://demo.placelab.com"
+		},
+		{
+			"key": "PlaceLabHost",
+			"value": ""
+		},
+		{
+			"key": "api_token",
+			"value": ""
+		}
+	]
+}
