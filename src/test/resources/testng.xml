@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="Placelab tests" verbose="1">
+ <parameter name="browser" value="chrome"/>
+    <test name="Placelab Login test API">
+        <classes>
+            <class name="placelab.apitestingautmation.homework2.task2.tests.LoginTestAPI"></class>
+        </classes>
+    </test>
+</suite>
