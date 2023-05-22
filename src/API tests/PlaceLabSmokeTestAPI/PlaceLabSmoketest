@@ -1,0 +1,24 @@
+Assignment 1
+
+- Create PlaceLab API Smoke Test in Postman and document in Given-When-Then
+format
+- Create postman collection and environment, automate Smoke Test flow and run
+smoke test in 3 iterations.
+- Report: Avg. Response time, Duration and Number of passed/failed steps
+
+Create a PR for review.
+
+Note: Remember to avoid sharing your personal credentials on GitHub
+repositories
+
+In this collection SMOKE test for PlaceLab via API is created.
+
+PlaceLab is an advanced analytics tool offering different modules. Using machine learning, PlaceLab automates the processes used to detect standard data issues, including data evaluation, verification, and enrichment.
+
+According to GIVEN-WHEN-THEN method, executed test can be described as following:
+
+Given user authenticates itself by providing correct and valid email and password, which is confirmed by authentication token obtained upon successful authentication.
+
+When user provides simple_data_extraction file containing necessary websites for report creation, along with country_core parameter to specify which extraction model will be used then user can create report for the given data and once the report is confirmed to be ready for download, which is indicated with status "FINISHED", report can be downloaded and ready for further use.
+
+Generated api_token, reportID, PlaceLabHost were stored and used as collection variable, while valid credentials were used and stored as environment variables
